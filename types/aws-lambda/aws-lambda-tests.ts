@@ -844,7 +844,6 @@ const legacyAsyncHandler: AWSLambda.APIGatewayProxyHandler = async (
 const node8AsyncHandler: AWSLambda.APIGatewayProxyHandler = async (
     event: AWSLambda.APIGatewayProxyEvent,
     context: AWSLambda.Context,
-    cb: AWSLambda.Callback<AWSLambda.APIGatewayProxyResult>,
 ) => {
     return { statusCode: 200, body: 'Is now valid!' };
 };
@@ -1001,7 +1000,7 @@ const SQSEvent: AWSLambda.SQSEvent = {
     ]
 };
 
-const SQSMessageLegacyAsyncHandler: AWSLambda.SQSHandler = async (
+const SQSMessageLegacyAsyncHandler: AWSLambda.SQSHandler = (
     event: AWSLambda.SQSEvent,
     context: AWSLambda.Context,
     cb: AWSLambda.Callback<void>,

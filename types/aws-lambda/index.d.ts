@@ -25,6 +25,7 @@
 //                 Trevor Leach <https://github.com/trevor-leach>
 //                 James Gregory <https://github.com/jagregory>
 //                 Erik Dalén <https://github.com/dalen>
+//                 Yaroslav Admin <https://github.com/devoto13>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 // TypeScript Version: 2.3
 
@@ -979,11 +980,26 @@ export interface LexResult {
  * @param callback – optional callback to return information to the caller, otherwise return value is null.
  * @return In the node8.10 runtime, a promise for the lambda result.
  */
-export type Handler<TEvent = any, TResult = any> = (
+export type CallbackHandler<TEvent = any, TResult = any> = (
     event: TEvent,
     context: Context,
     callback: Callback<TResult>,
-) => void | Promise<TResult>;
+// In node8.10 runtime, handlers may return a promise for the result value. Async functions implicitly
+// return Promise<void>, so async hanlders that also use the callback may unexpectedly produce a `null` result.
+// The return type is intentionally badly typed to prevent users from mixing callback and returning Promise.
+) => void | Promise<number & string>;
+
+/**
+ * AWS Lambda handler using async function.
+ * http://docs.aws.amazon.com/lambda/latest/dg/nodejs-prog-model-handler.html
+ *
+ * @param event – event data.
+ * @param context – runtime information of the Lambda function that is executing.
+ * @return In the node8.10 runtime, a promise for the lambda result.
+ */
+export type AsyncHandler<TEvent = void, TResult = void> = (event: TEvent, context: Context) => Promise<TResult>;
+
+export type Handler<TEvent = any, TResult = any> = CallbackHandler<TEvent, TResult> | AsyncHandler<TEvent, TResult>;
 
 /**
  * Optional callback parameter.
